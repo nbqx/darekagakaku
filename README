@@ -1,0 +1,4 @@
+http://darekagakaku.herokuapp.com/
+
+> lein deps
+> lein run
