@@ -23,7 +23,7 @@
 
 ;;sanitize text
 (defn my-sanitize [st]
-  (-> st str (.replace "&" "&amp;") (.replace "<" "&lt;") (.replace ">" "&gt;") (.replace "\"" "&quot;")))
+  (-> st str (.replace "&" "&amp;") (.replace "<" "&lt;") (.replace ">" "&gt;")))
 
 ;;get
 (defn get-or-new [id]
