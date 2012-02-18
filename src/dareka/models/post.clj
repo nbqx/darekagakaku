@@ -23,7 +23,7 @@
 
 ;;sanitize text
 (defn my-sanitize [st]
-  (-> st str (.replace "&" "&amp;") (.replace "<" "&lt;") (.replace ">" "&gt;")))
+  (-> st str (.replace "&" "&amp;") (.replace "<" "&lt;") (.replace ">" "&gt;") (.replace "\"" "&quot;")))
 
 ;;get
 (defn get-or-new [id]
@@ -43,3 +43,8 @@
       (mongo/insert! :posts {:date id :content txt})
       (let [itm (mongo/fetch-one :posts :where {:date id})]
         (mongo/update! :posts itm (merge itm {:content txt}))))))
+
+;;get recent
+(defn get-recent [n]
+  (conn)
+  (mongo/fetch :posts :limit n :sort {:date -1}))

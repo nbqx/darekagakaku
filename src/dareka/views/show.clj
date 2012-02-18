@@ -13,10 +13,9 @@
 (defn show [data]
   (let [date (:date data)
         text (:content data)]
-    (common/layout
-     [:div.content
-      [:h1 (utils/jp-date date)]
-      (common/add-p-tags text)
-      [:div.right
-       (link-to "/a" "About")
-       (editable? date)]])))
+    [:div.content
+     [:h1 (utils/jp-date date)]
+     (common/add-p-tags text)
+     [:div.right
+      (link-to "/a" "About")
+      (editable? date)]]))

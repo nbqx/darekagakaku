@@ -13,6 +13,9 @@
   (let [dt (fmt/parse url-format date)]
     (fmt/unparse jp-format dt)))
 
+(defn get-utc [date]
+  (fmt/parse url-format date))
+
 (defn todays-url []
   (let [now (jp-now)]
     (fmt/unparse url-format now)))
