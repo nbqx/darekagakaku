@@ -1,6 +1,7 @@
 (ns dareka.models.post
   (:require [dareka.utils :as utils]
-            [somnium.congomongo :as mongo]))
+            [somnium.congomongo :as mongo])
+  (:use [somnium.congomongo.config :only [*mongo-config*]]))
 
 (def dev-db "mydb")
 (def dev-host "127.0.0.1")
@@ -13,13 +14,14 @@
     (when (.find matcher) ;; Check if it matches.
       (zipmap [:match :user :pass :host :port :db] (re-groups matcher))))) ;; Construct an options map.
 
-(defn conn [] 
-  (let [mongo-url (get (System/getenv) "MONGOHQ_URL")]
-    (if (nil? mongo-url)
-      (mongo/mongo! :db dev-db :host dev-host :port dev-port)
-      (let [config (split-mongo-url mongo-url)]
-        (mongo/mongo! :db (:db config) :host (:host config) :port (Integer. (:port config)))
-        (mongo/authenticate (:user config) (:pass config))))))
+(defn conn []
+  (when (not (mongo/connection? *mongo-config*))
+    (let [mongo-url (get (System/getenv) "MONGOHQ_URL")]
+      (if (nil? mongo-url)
+        (mongo/mongo! :db dev-db :host dev-host :port dev-port)
+        (let [config (split-mongo-url mongo-url)]
+          (mongo/mongo! :db (:db config) :host (:host config) :port (Integer. (:port config)))
+          (mongo/authenticate (:user config) (:pass config)))))))
 
 ;;sanitize text
 (defn my-sanitize [st]
