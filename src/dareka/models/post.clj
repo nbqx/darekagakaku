@@ -33,7 +33,7 @@
   (let [n (mongo/fetch-count :posts :where {:date id})
         today (utils/todays-url)]
     (if (and (= n 0) (= id today))
-      (mongo/insert! :posts {:date id :content ""})
+      (mongo/insert! :posts {:date id :content "" :updated_at (.toString (utils/jp-now))})
       (mongo/fetch-one :posts :where {:date id}))))
   
 ;;insert
@@ -42,9 +42,9 @@
   (let [n (mongo/fetch-count :posts :where {:date id})
         txt (my-sanitize cont)]
     (if (= n 0)
-      (mongo/insert! :posts {:date id :content txt})
+      (mongo/insert! :posts {:date id :content txt :updated_at (.toString (utils/jp-now))})
       (let [itm (mongo/fetch-one :posts :where {:date id})]
-        (mongo/update! :posts itm (merge itm {:content txt}))))))
+        (mongo/update! :posts itm (merge itm {:content txt :updated_at (.toString (utils/jp-now))}))))))
 
 ;;get recent
 (defn get-recent [n]
