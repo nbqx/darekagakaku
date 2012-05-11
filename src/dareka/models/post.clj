@@ -43,8 +43,12 @@
         txt (my-sanitize cont)]
     (if (= n 0)
       (mongo/insert! :posts {:date id :content txt :updated_at (.toString (utils/jp-now))})
-      (let [itm (mongo/fetch-one :posts :where {:date id})]
-        (mongo/update! :posts itm (merge itm {:content txt :updated_at (.toString (utils/jp-now))}))))))
+      (let [itm (mongo/fetch-one :posts :where {:date id})
+            waybacks (:waybacks itm)
+            waybacks (if (nil? waybacks) [] waybacks)]
+        (mongo/update! :posts itm (merge itm {:content txt
+                                              :updated_at (.toString (utils/jp-now))
+                                              :waybacks (conj waybacks (:content itm))}))))))
 
 ;;get recent
 (defn get-recent [n]
