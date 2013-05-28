@@ -20,7 +20,12 @@
       (if (nil? mongo-url)
         (mongo/mongo! :db dev-db :host dev-host :port dev-port)
         (let [config (split-mongo-url mongo-url)]
-          (mongo/mongo! :db (:db config) :host (:host config) :port (Integer. (:port config)))
+          ;; (mongo/mongo! :db (:db config) :host (:host config) :port (Integer. (:port config)))
+          ;; use make-connecton + set-connection! with :auto-connect-retry option for mongohq's timeout
+          (mongo/set-connection! (mongo/make-connection (:db config)
+                                                        :host (:host config)
+                                                        :port (Integer. (:port config))
+                                                        (mongo/mongo-options :auto-connect-retry true)))
           (mongo/authenticate (:user config) (:pass config)))))))
 
 ;;sanitize text
